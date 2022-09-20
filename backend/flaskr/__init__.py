@@ -219,7 +219,7 @@ def create_app(test_config=None):
             abort(422)
 
     """
-    @TODO:
+    @DONE:
     Create a POST endpoint to get questions to play the quiz.
     This endpoint should take category and previous question parameters
     and return a random questions within the given category,
@@ -229,6 +229,31 @@ def create_app(test_config=None):
     one question at a time is displayed, the user is allowed to answer
     and shown whether they were correct or not.
     """
+    @app.route('/quizzes', methods=['POST'])
+    def play_quizzes():
+        data = request.get_json()
+        previous_question = data.get('previous_question')
+        quiz_category = data.get('category')
+        
+        try:
+            if len(quiz_category) == 0:
+                available_quizzes = Question.query.filter(Question.id.notin_(previous_question)).all()
+            else:
+                available_quizzes = Question.query.filter(
+                    Question.category == str(quiz_category)).filter(Question.id.notin_(previous_question)).all()
+                    
+            if len(available_quizzes) <= 0:
+                quiz_question = None
+            else:
+                quiz_question = available_quizzes[random.randrange(0, len(available_quizzes))]
+                formatted_question = quiz_question.format()
+                
+            return jsonify({
+                'success': True,
+                'question': formatted_question,
+            })
+        except:
+            abort(422)
 
     """
     @TODO:
