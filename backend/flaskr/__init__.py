@@ -132,7 +132,7 @@ def create_app(test_config=None):
             abort(422)
 
     """
-    @TODO:
+    @DONE:
     Create an endpoint to POST a new question,
     which will require the question and answer text,
     category, and difficulty score.
@@ -168,7 +168,7 @@ def create_app(test_config=None):
             abort(422)
 
     """
-    @TODO:
+    @DONE:
     Create a POST endpoint to get questions based on a search term.
     It should return any questions for whom the search term
     is a substring of the question.
@@ -177,6 +177,22 @@ def create_app(test_config=None):
     only question that include that string within their question.
     Try using the word "title" to start.
     """
+    @app.route('/questions/search', methods=['POST'])
+    def search_questions():
+        body = request.get_json()
+        search = body.get('searchTerm', '')
+
+        if search:
+            selection = Question.query.filter(Question.question.ilike(f"%{search_term}%"))
+            selection = selection.order_by(Question.id)
+            current_questions = paginate_questions(request, selection)
+            return jsonify({
+                'success': True,
+                'questions': current_questions,
+                'total_questions': len(selection)
+            })
+        else:
+            abort(400)
 
     """
     @TODO:
