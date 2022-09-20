@@ -265,8 +265,16 @@ def create_app(test_config=None):
         return jsonify({
             'success': False,
             'error': 400,
-            'message': 'Bad request'
+            'message': 'bad request'
         }), 400
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            'success': False,
+            'error': 404,
+            'message': 'resourse not found'
+        }), 404
 
     return app
 
