@@ -29,7 +29,7 @@ def create_app(test_config=None):
     CORS(app, resources={r"*" : {'origins': '*'}})
 
     """
-    @TODO: Use the after_request decorator to set Access-Control-Allow
+    @DONE: Use the after_request decorator to set Access-Control-Allow
     """
     @app.after_request
     def after_request(response):
@@ -42,10 +42,23 @@ def create_app(test_config=None):
         return response
 
     """
-    @TODO:
+    @DONE:
     Create an endpoint to handle GET requests
     for all available categories.
     """
+    @app.route('/categories')
+    def get_categories():
+        categories = Category.query.order_by(Category.id).all()
+        
+        if len(categories) == 0:
+            abort(404)
+            
+        formatted_categories = [category.format() for category in categories]
+        
+        return jsonify({
+            'success': True,
+            'categories': formatted_categories
+        })
 
 
     """
