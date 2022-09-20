@@ -81,9 +81,15 @@ def create_app(test_config=None):
         formatted_categories = [category.format() for category in categories]
 
         for question in current_questions:
-            current_category = question.category
-            current_category = Category.query.filter(Category.id)
-        
+            current_category_id = int(question['category'])
+            category = Category.query.get(current_category_id)
+
+        current_category = {
+            'id': category.id,
+            'type': category.type,
+        }
+
+                    
         if len(current_questions) == 0:
             abort(404)
             
@@ -91,7 +97,7 @@ def create_app(test_config=None):
             'success': True,
             'questions': current_questions,
             'total_questions': len(selection),
-            'current category': current_category,
+            'current category id': current_category,
             'categories': formatted_categories,
     })
 
