@@ -276,5 +276,13 @@ def create_app(test_config=None):
             'message': 'resourse not found'
         }), 404
 
+    @app.errorhandler(405)
+    def method_not_found(error):
+        return jsonify({
+            'success': False,
+            'error': 405,
+            'message': 'method not found'
+        }), 405
+
     return app
 
